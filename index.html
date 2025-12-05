@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Program Analysis Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white p-6 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Program Performance Dashboard</h1>
+                <p class="text-indigo-200 mt-1">Speaker Series & VA Focus Lounge Analysis • Cohorts 9-13</p>
+            </div>
+            <div class="mt-4 md:mt-0 bg-indigo-800 px-4 py-2 rounded-lg flex items-center gap-2">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="text-sm font-semibold">2025 Full Year Analysis</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 space-y-8">
+
+        <!-- Executive Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="card stat-card p-6 border-l-4 border-emerald-500">
+                <div class="text-gray-500 text-sm font-medium uppercase">Highest Attendance</div>
+                <div class="text-3xl font-bold mt-1 text-slate-800">2,213</div>
+                <div class="text-xs text-emerald-600 mt-2 font-semibold">
+                    <i class="fas fa-arrow-up"></i> Cohort 11 (Week 2)
+                </div>
+                <div class="text-xs text-gray-400 mt-1">"Digital Career Launchpad"</div>
+            </div>
+            
+            <div class="card stat-card p-6 border-l-4 border-red-500">
+                <div class="text-gray-500 text-sm font-medium uppercase">Lowest Lounge CSAT</div>
+                <div class="text-3xl font-bold mt-1 text-slate-800">83%</div>
+                <div class="text-xs text-red-600 mt-2 font-semibold">
+                    <i class="fas fa-exclamation-triangle"></i> Cohort 13
+                </div>
+                <div class="text-xs text-gray-400 mt-1">Critical Satisfaction Drop</div>
+            </div>
+
+            <div class="card stat-card p-6 border-l-4 border-purple-500">
+                <div class="text-gray-500 text-sm font-medium uppercase">C13 Retention</div>
+                <div class="text-3xl font-bold mt-1 text-slate-800">-81%</div>
+                <div class="text-xs text-purple-600 mt-2 font-semibold">
+                    <i class="fas fa-arrow-down"></i> Week 2 to 8
+                </div>
+                <div class="text-xs text-gray-400 mt-1">1740 (W2) to 331 (W8)</div>
+            </div>
+
+            <div class="card stat-card p-6 border-l-4 border-amber-500">
+                <div class="text-gray-500 text-sm font-medium uppercase">VA Lounge Leader</div>
+                <div class="text-3xl font-bold mt-1 text-slate-800">C-12</div>
+                <div class="text-xs text-amber-600 mt-2 font-semibold">
+                    941 Total Views
+                </div>
+                <div class="text-xs text-gray-400 mt-1">Highest engagement</div>
+            </div>
+        </div>
+
+        <!-- Section 1: Speaker Series Analysis -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Chart Area -->
+            <div class="card col-span-2 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Speaker Series: Attendance Trends</h2>
+                        <p class="text-sm text-gray-500">Comparing views across Week 2, 6, and 8 per Cohort</p>
+                    </div>
+                </div>
+                <div class="relative h-80">
+                    <canvas id="speakerChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Insights Panel -->
+            <div class="card p-6 bg-indigo-50 border border-indigo-100">
+                <h3 class="text-lg font-bold text-indigo-900 mb-4"><i class="fas fa-lightbulb text-amber-500 mr-2"></i>Key Insights</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="mt-1"><i class="fas fa-rocket text-indigo-600"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-sm text-indigo-900">The "Career" Effect (C11 & C13)</h4>
+                            <p class="text-xs text-indigo-800 mt-1">
+                                Both C11 and C13 started massive (~1700-2200 views) due to strong "Career/Niche" topics in Week 2, but both failed to sustain this, crashing by Week 8.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <div class="mt-1"><i class="fas fa-money-bill-wave text-emerald-600"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-sm text-indigo-900">The "Recovery" Groups (C9 & C12)</h4>
+                            <p class="text-xs text-indigo-800 mt-1">
+                                Cohorts 9 and 12 show a distinct "V-Shape." They dipped in Week 6 but recovered strongly in Week 8, likely due to urgent topics (Freelancing).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <div class="mt-1"><i class="fas fa-exclamation-circle text-red-500"></i></div>
+                        <div>
+                            <h4 class="font-semibold text-sm text-indigo-900">Cohort 13's "December Slide"</h4>
+                            <p class="text-xs text-indigo-800 mt-1">
+                                C13 ended on a low note (331 views, 83% CSAT) for the "Mindset" topic. This is the worst Week 8 performance of the year.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: VA Focus Lounge -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="card p-6">
+                <h2 class="text-xl font-bold text-slate-800 mb-2">VA Focus Lounge Performance</h2>
+                <p class="text-sm text-gray-500 mb-6">Views vs. Customer Satisfaction (CSAT)</p>
+                <div class="relative h-64">
+                    <canvas id="loungeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card p-6 flex flex-col justify-center">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Focus Lounge Observations</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded-full mr-3 mt-1">New Data</span>
+                        <p class="text-sm text-gray-600"><strong>Cohort 13</strong> shows a concerning trend: Moderate views (524) but the <strong>lowest CSAT of the year (83%)</strong>. This suggests the format may have become stale by year-end.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full mr-3 mt-1">Quality</span>
+                        <p class="text-sm text-gray-600"><strong>Cohort 12</strong> struggled with satisfaction (92%) due to high volume, but C13 dropped even further despite lower volume, pointing to content or moderator fatigue.</p>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full mr-3 mt-1">Efficiency</span>
+                        <p class="text-sm text-gray-600"><strong>Cohort 11</strong> remains the benchmark for satisfaction (98%) with a smaller, highly engaged group.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 3: Strategic Recommendations -->
+        <div class="card bg-slate-800 text-white p-8 rounded-xl">
+            <h2 class="text-2xl font-bold mb-6 border-b border-slate-600 pb-4">Strategic Recommendations 2026</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-purple-400 mb-2">1. End-of-Year Strategy</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        C13's Week 8 crash (331 views) proves that "Mindset" topics don't work in December. <strong>Action:</strong> End the year with high-utility sessions (e.g., "Planning your 2026 Income") or finish the series earlier.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-emerald-400 mb-2">2. The "Recovery" Formula</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Cohorts 9 & 12 prove that you can recover from a slump if the Week 8 topic is strong (Freelancing). <strong>Action:</strong> Ensure Week 8 is always a "Hard Skill" or "Money" topic, never soft skills.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-red-400 mb-2">3. Investigate C13 Lounge</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        The 83% CSAT for C13 Lounge is a red flag. <strong>Action:</strong> Audit the C13 Lounge transcripts. Was it technical issues, the facilitator, or topic exhaustion?
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center p-8 text-gray-400 text-sm">
+        Generated based on Speaker Series 2025 & Focus Lounge Data (Cohorts 9-13)
+    </footer>
+
+    <script>
+        // --- Data Configuration ---
+        
+        // Speaker Series Data
+        const cohorts = ['Cohort 9', 'Cohort 10', 'Cohort 11', 'Cohort 12', 'Cohort 13'];
+        const week2Views = [1032, 933, 2213, 816, 1740];
+        const week6Views = [258, 239, 293, 469, 502];
+        const week8Views = [1005, 877, 217, 1740, 331];
+
+        // VA Focus Lounge Data
+        const loungeViews = [566, 558, 433, 941, 524];
+        const loungeCSAT = [96, 97, 98, 92, 83];
+
+        // --- Chart 1: Speaker Series Trends ---
+        const ctxSpeaker = document.getElementById('speakerChart').getContext('2d');
+        new Chart(ctxSpeaker, {
+            type: 'line',
+            data: {
+                labels: ['Week 2', 'Week 6', 'Week 8'],
+                datasets: [
+                    {
+                        label: 'Cohort 9',
+                        data: [1032, 258, 1005],
+                        borderColor: '#3b82f6', // blue
+                        backgroundColor: '#3b82f6',
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Cohort 10',
+                        data: [933, 239, 877],
+                        borderColor: '#64748b', // slate
+                        backgroundColor: '#64748b',
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        borderDash: [5, 5] 
+                    },
+                    {
+                        label: 'Cohort 11',
+                        data: [2213, 293, 217],
+                        borderColor: '#10b981', // emerald
+                        backgroundColor: '#10b981',
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Cohort 12',
+                        data: [816, 469, 1740],
+                        borderColor: '#f59e0b', // amber
+                        backgroundColor: '#f59e0b',
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
+                    },
+                    {
+                        label: 'Cohort 13',
+                        data: [1740, 502, 331],
+                        borderColor: '#8b5cf6', // purple
+                        backgroundColor: '#8b5cf6',
+                        tension: 0.3,
+                        borderWidth: 4, // Highlight C13
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            afterLabel: function(context) {
+                                if (context.dataset.label === 'Cohort 13' && context.label === 'Week 8') {
+                                    return ' Low attendance likely due to End of Year/Topic';
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Total Views' },
+                        grid: { borderDash: [2, 4] }
+                    }
+                }
+            }
+        });
+
+        // --- Chart 2: VA Focus Lounge ---
+        const ctxLounge = document.getElementById('loungeChart').getContext('2d');
+        new Chart(ctxLounge, {
+            type: 'bar',
+            data: {
+                labels: cohorts,
+                datasets: [
+                    {
+                        label: 'Total Views',
+                        data: loungeViews,
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.8)' // Highlight C13 Purple
+                        ],
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y',
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'CSAT Average (%)',
+                        data: loungeCSAT,
+                        type: 'line',
+                        borderColor: '#ef4444', // red
+                        borderWidth: 2,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#ef4444',
+                        pointRadius: 5,
+                        yAxisID: 'y1',
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Total Views' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        min: 80,
+                        max: 100,
+                        title: { display: true, text: 'CSAT Score (%)' },
+                        grid: { drawOnChartArea: false } 
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
